@@ -50,6 +50,7 @@ class Session:
                 verify=ssl_verification(module=self.m),
                 retries=self.m.params['api_retries'],
                 proxy=proxy,
+                http2=True,
             ),
             headers={'User-Agent': 'Ansible'}
         )
