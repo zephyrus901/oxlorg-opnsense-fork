@@ -58,6 +58,8 @@ def run_module():
                 'nat_one_to_one',
                 'nat_destination',
                 'nut',
+                'dyndns',
+                'tailscale',
             ],
             description='What part of the running config should be reloaded'
         ),
@@ -201,6 +203,14 @@ def run_module():
         elif target == 'nut':
             from ansible_collections.oxlorg.opnsense.plugins.module_utils.main.nut import \
                 Nut as Target_Obj
+
+        elif target == 'dyndns':
+            from ansible_collections.oxlorg.opnsense.plugins.module_utils.main.dyndns_account import \
+                Account as Target_Obj
+
+        elif target == 'tailscale':
+            from ansible_collections.oxlorg.opnsense.plugins.module_utils.main.tailscale_settings import \
+                Settings as Target_Obj
 
     except MODULE_EXCEPTIONS:
         module_dependency_error()
