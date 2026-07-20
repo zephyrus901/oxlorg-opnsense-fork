@@ -46,6 +46,7 @@ action_groups:
     - oxlorg.opnsense.wireguard_general
   interface:
     - oxlorg.opnsense.interfaces_assign
+    - oxlorg.opnsense.interfaces_settings
     - oxlorg.opnsense.interface_vlan
     - oxlorg.opnsense.interface_vxlan
     - oxlorg.opnsense.interface_vip
