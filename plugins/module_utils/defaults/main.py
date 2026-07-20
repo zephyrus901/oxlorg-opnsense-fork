@@ -32,6 +32,13 @@ OPN_MOD_ARGS = dict(
         description='If you use an internal certificate-authority to create the certificate of the target firewall, '
                     'provide the path to its public key for validation'
     ),
+    ssl_verify_hostname=dict(
+        type='bool', required=False, default=True,
+        description="If the certificate's hostname/IP (CN/SAN) should be validated against 'firewall'. Set to "
+                    "'false' to keep full chain validation via 'ssl_ca_file' while connecting to a target "
+                    "(e.g. an IP) the certificate was not issued for -- e.g. a self-signed cert whose only SAN "
+                    "is a DNS name, reached via IP. Has no effect if 'ssl_verify' is 'false'"
+    ),
     debug=dict(
         type='bool', required=False, default=False,
         description="Used to en-/disable the debug mode. All API requests and responses will be shown "

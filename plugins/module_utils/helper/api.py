@@ -93,12 +93,20 @@ def ssl_verification(module: AnsibleModule) -> (ssl.SSLContext, bool):
     if not module.params['ssl_verify']:
         context = False
 
-    elif module.params['ssl_ca_file'] is not None:
-        if Path(module.params['ssl_ca_file']).is_file():
-            context.load_verify_locations(cafile=module.params['ssl_ca_file'])
+    else:
+        if not module.params.get('ssl_verify_hostname', True):
+            # Full chain validation stays on (verify_mode stays CERT_REQUIRED, set by
+            # create_default_context() above) -- only the CN/SAN-vs-target check is skipped.
+            # Python's ssl module requires check_hostname be set before verify_mode is
+            # touched, but we never lower verify_mode here, so plain assignment is safe.
+            context.check_hostname = False
 
-        else:
-            module.fail_json(f"Provided 'ssl_ca_file' at path '{module.params['ssl_ca_file']}' does not exist!")
+        if module.params['ssl_ca_file'] is not None:
+            if Path(module.params['ssl_ca_file']).is_file():
+                context.load_verify_locations(cafile=module.params['ssl_ca_file'])
+
+            else:
+                module.fail_json(f"Provided 'ssl_ca_file' at path '{module.params['ssl_ca_file']}' does not exist!")
 
     return context
 
