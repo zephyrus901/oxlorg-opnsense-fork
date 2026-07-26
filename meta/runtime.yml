@@ -209,6 +209,13 @@ action_groups:
   nut:
     - oxlorg.opnsense.nut
     - oxlorg.opnsense.nut_diagnostics
+  dyndns:
+    - oxlorg.opnsense.dyndns_general
+    - oxlorg.opnsense.dyndns_account
+  tailscale:
+    - oxlorg.opnsense.tailscale_settings
+    - oxlorg.opnsense.tailscale_authentication
+    - oxlorg.opnsense.tailscale_subnet
   all:
     - metadata:
         extend_group:
@@ -242,6 +249,8 @@ action_groups:
           - oxlorg.opnsense.haproxy
           - oxlorg.opnsense.nut
           - oxlorg.opnsense.nut_diagnostics
+          - oxlorg.opnsense.dyndns
+          - oxlorg.opnsense.tailscale
 
 plugin_routing:
   modules:
