@@ -17,6 +17,7 @@ class Authentication(GeneralModule):
     API_CONT_REL = 'service'
     FIELDS_CHANGE = ['loginServer', 'preAuthKey']
     FIELDS_ALL = FIELDS_CHANGE
+    FIELDS_TYPING = {}
     FIELDS_DIFF_NO_LOG = ['preAuthKey']
 
     def __init__(self, module: AnsibleModule, result: dict, session: Session = None):
