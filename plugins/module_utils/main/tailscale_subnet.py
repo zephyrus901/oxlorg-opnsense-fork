@@ -21,6 +21,7 @@ class Subnet(BaseModule):
     FIELDS_CHANGE = ['description']
     FIELDS_ALL = [FIELD_ID]
     FIELDS_ALL.extend(FIELDS_CHANGE)
+    FIELDS_TYPING = {}
     EXIST_ATTR = 'subnet'
 
     def __init__(self, module: AnsibleModule, result: dict, session: Session = None, fail: dict = None):
