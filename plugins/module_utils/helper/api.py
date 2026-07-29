@@ -175,7 +175,13 @@ def check_response(module: AnsibleModule, cnf: dict, response) -> dict:
         json = response.json()
 
     except JSONDecodeError:
-        json = {}
+        # issue #363: a 200 with a non-JSON body used to silently become '{}' here,
+        # which callers like find_multiple_links() then read as "no existing entries"
+        # instead of an error -- fail loudly instead of masking a bad response as empty data.
+        module.fail_json(
+            f"API call failed | Non-JSON response (status {response.status_code}) | "
+            f"Body: {response.text[:500]}"
+        )
 
     if response.status_code not in cnf['allowed_http_stati'] or \
             ('result' in json and json['result'] == 'failed'):
