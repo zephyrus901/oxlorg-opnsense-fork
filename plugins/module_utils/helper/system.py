@@ -51,12 +51,12 @@ def wait_for_response(module: AnsibleModule) -> bool:
     raise TimeoutError
 
 
-def get_upgrade_status(s: Session) -> dict:
+def get_upgrade_status(s: Session, soft_fail: bool = False) -> dict:
     return s.get({
         'command': 'upgradestatus',
         'module': 'core',
         'controller': 'firmware',
-    })
+    }, soft_fail=soft_fail)
 
 
 def wait_for_update(module: AnsibleModule, s: Session) -> bool:
@@ -74,7 +74,7 @@ def wait_for_update(module: AnsibleModule, s: Session) -> bool:
         poll_interval_start = time()
 
         try:
-            result = get_upgrade_status(s)
+            result = get_upgrade_status(s, soft_fail=True)
             status = result['status']
 
             _wait_msg(module, f"Got response: {status}")
@@ -87,7 +87,7 @@ def wait_for_update(module: AnsibleModule, s: Session) -> bool:
                 _wait_msg(module, f"Got result: {result['log']}")
                 return True
 
-        except (HTTPX_EXCEPTIONS, ConnectionError, TimeoutError):
+        except (*HTTPX_EXCEPTIONS, ConnectionError, TimeoutError):
             # not reachable while rebooting
             _wait_msg(module, 'Waiting for response..')
 

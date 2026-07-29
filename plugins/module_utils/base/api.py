@@ -55,7 +55,7 @@ class Session:
             headers={'User-Agent': 'Ansible'}
         )
 
-    def get(self, cnf: dict) -> dict:
+    def get(self, cnf: dict, soft_fail: bool = False) -> dict:
         params_path = get_params_path(cnf=cnf)
         call_url = f"{cnf['module']}/{cnf['controller']}/{cnf['command']}{params_path}"
 
@@ -73,6 +73,13 @@ class Session:
             )
 
         except HTTPX_EXCEPTIONS as error:
+            # soft_fail: let a caller's own retry loop (e.g. wait_for_update polling
+            # while the firewall's web process is busy servicing the job it's polling
+            # the status of) catch this itself -- fail_json() here would hard-exit the
+            # module before that caller's except clause ever runs (issue #358).
+            if soft_fail:
+                raise
+
             api_pretty_exception(
                 m=self.m, method='GET', error=error,
                 url=f'{self.s.base_url}{call_url}',
